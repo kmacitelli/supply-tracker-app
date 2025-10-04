@@ -110,11 +110,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 alertQuantity = Integer.parseInt(binNameText.getText().toString());
                 tempBin.setAlertQuantity(alertQuantity);
-                // Move logic below to later created functions in the bin creation process
-                binList.add(tempBin);
-
-                HomeViewModel homeViewModel = new ViewModelProvider(MainActivity.this).get(HomeViewModel.class);
-                homeViewModel.setBins(binList);
+                showNoItemPopup(tempBin);
             }
         });
 
@@ -123,6 +119,39 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
+        });
+
+        builder.show();
+    }
+
+    public void showNoItemPopup(Bin tempBin) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("No item in bin calibration");
+        builder.setMessage("Please press OK when there are NO items in the bin");
+
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            // TODO: read weight from sensor for empty bin
+            double noItemBinWeight = 20.0;
+
+            showOneItemPopup(tempBin, noItemBinWeight);
+        });
+
+        builder.show();
+    }
+    public void showOneItemPopup(Bin tempBin, double noItemBinWeight) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("One item in bin calibration");
+        builder.setMessage("Please press OK when there is ONE item in the bin");
+
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            double oneItemBinWeight = 25.0;
+            // TODO: read weight from sensor for one item in bin
+            double individualWeight = oneItemBinWeight - noItemBinWeight;
+            tempBin.setIndividualWeight(individualWeight);
+
+            binList.add(tempBin);
+            HomeViewModel homeViewModel = new ViewModelProvider(MainActivity.this).get(HomeViewModel.class);
+            homeViewModel.setBins(binList);
         });
 
         builder.show();
@@ -141,21 +170,10 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.add_device) {
             Toast.makeText(this, "Added a new bin.", Toast.LENGTH_LONG).show();
             Bin tempBin = new Bin();
-            // Asks for name and supply alert quantity
+            // Prompts the popup chain that gets required info from user
+            // Name of bin, alert qty, individual weight
             showBinNamePopup(tempBin);
-            // Ask for name of supply
-            tempBin.setName(binName);
-            // Get initial value of bin with no weight
-            /*
-            * Get this information from force sensor
-            */
-            // Get initial value of bin with one item in it
-            /*
-            * Get this information from force sensor
-             */
-            // Figure out how many items are in the bin
 
-            // Create bin object and add to list of bins
             return true;
         }
         return super.onOptionsItemSelected(item);
