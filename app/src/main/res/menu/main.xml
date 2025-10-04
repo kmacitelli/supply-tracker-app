@@ -9,8 +9,7 @@
     <item
         android:id="@+id/add_device"
         android:title="Add Device"
-        android:icon="@drawable/ic_menu_camera"
+        android:icon="@drawable/ic_add_icon"
         app:showAsAction="ifRoom"
         />
-    <!-- TODO: make it a plus -->
 </menu>
