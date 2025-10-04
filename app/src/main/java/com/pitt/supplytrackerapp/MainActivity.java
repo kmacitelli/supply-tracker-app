@@ -15,6 +15,7 @@ import com.google.android.material.navigation.NavigationView;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -23,6 +24,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.pitt.supplytrackerapp.databinding.ActivityMainBinding;
+import com.pitt.supplytrackerapp.ui.home.HomeViewModel;
 
 import java.util.*;
 
@@ -64,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
     }
 
-    public void showBinNamePopup() {
+    public void showBinNamePopup(Bin tempBin) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Enter bin name");
 
@@ -78,7 +80,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 binName = binNameText.getText().toString();
-                showAlertQuantityPopup();
+                tempBin.setName(binName);
+                showAlertQuantityPopup(tempBin);
             }
         });
 
@@ -92,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
-    public void showAlertQuantityPopup() {
+    public void showAlertQuantityPopup(Bin tempBin) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Enter alert quantity");
 
@@ -106,6 +109,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 alertQuantity = Integer.parseInt(binNameText.getText().toString());
+                tempBin.setAlertQuantity(alertQuantity);
+                // Move logic below to later created functions in the bin creation process
+                binList.add(tempBin);
+
+                HomeViewModel homeViewModel = new ViewModelProvider(MainActivity.this).get(HomeViewModel.class);
+                homeViewModel.setBins(binList);
             }
         });
 
@@ -132,27 +141,21 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.add_device) {
             Toast.makeText(this, "Added a new bin.", Toast.LENGTH_LONG).show();
             Bin tempBin = new Bin();
-            int alertQuantity = 0;
-            showBinNamePopup();
+            // Asks for name and supply alert quantity
+            showBinNamePopup(tempBin);
             // Ask for name of supply
             tempBin.setName(binName);
             // Get initial value of bin with no weight
-            double noItemBinWeight = 0.0;
             /*
             * Get this information from force sensor
             */
             // Get initial value of bin with one item in it
-            double oneItemBinWeight = 0.0;
             /*
             * Get this information from force sensor
              */
             // Figure out how many items are in the bin
-            double individualWeight = oneItemBinWeight - noItemBinWeight;
 
-            // Ask for alert quantity
-            tempBin.setAlertQuantity(alertQuantity);
             // Create bin object and add to list of bins
-            binList.add(tempBin);
             return true;
         }
         return super.onOptionsItemSelected(item);

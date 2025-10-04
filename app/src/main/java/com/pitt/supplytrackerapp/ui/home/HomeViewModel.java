@@ -3,18 +3,20 @@ package com.pitt.supplytrackerapp.ui.home;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import java.util.List;
+
 import com.pitt.supplytrackerapp.*;
 
 public class HomeViewModel extends ViewModel {
 
-    private final MutableLiveData<String> mText;
+    private final MutableLiveData<List<Bin>> binsLiveData = new MutableLiveData<>();
 
-    public HomeViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("Current weight: ");
+    public void setBins(List<Bin> bins) {
+        binsLiveData.setValue(bins);
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public LiveData<List<Bin>> getBins() {
+        return binsLiveData;
     }
+
 }
