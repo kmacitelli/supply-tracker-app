@@ -7,6 +7,8 @@ public class Bin {
     private String name;
     private int totalQuantity;
     private double individualWeight;
+
+    private double totalWeight;
     private int alertQuantity;
 
     public Bin() {
@@ -22,6 +24,10 @@ public class Bin {
     public void setIndividualWeight(double individualWeight) {
         this.individualWeight = individualWeight;
     }
+
+    public void setTotalWeight(double totalWeight) {
+        this.totalWeight = totalWeight;
+    }
     public void setAlertQuantity(int alertQuantity) {
         this.alertQuantity = alertQuantity;
     }
@@ -34,6 +40,10 @@ public class Bin {
     }
     public double getIndividualWeight() {
         return individualWeight;
+    }
+
+    public double getTotalWeight() {
+        return totalWeight;
     }
     public int getAlertQuantity() {
         return alertQuantity;

@@ -19,4 +19,18 @@ public class HomeViewModel extends ViewModel {
         return binsLiveData;
     }
 
+    public void updateBin(Bin bin) {
+        List<Bin> current = binsLiveData.getValue();
+        if (current != null) {
+            // Replace bin with same name
+            for (int i = 0; i < current.size(); i++) {
+                if (current.get(i).getName().equals(bin.getName())) {
+                    current.set(i, bin);
+                    break;
+                }
+            }
+            binsLiveData.setValue(current);
+        }
+    }
+
 }

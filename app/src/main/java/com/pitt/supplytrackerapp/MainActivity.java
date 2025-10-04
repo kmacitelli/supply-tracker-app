@@ -1,7 +1,12 @@
 package com.pitt.supplytrackerapp;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -15,6 +20,9 @@ import com.google.android.material.navigation.NavigationView;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -25,6 +33,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.pitt.supplytrackerapp.databinding.ActivityMainBinding;
 import com.pitt.supplytrackerapp.ui.home.HomeViewModel;
+import com.pitt.supplytrackerapp.handler.*;
 
 import java.util.*;
 
@@ -64,6 +73,35 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        createNotificationChannel();
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Bin Alerts";
+            String description = "Notifications when bin quantity is low";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("BIN_ALERT_CHANNEL", name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    public void sendBinAlertNotification(String binName) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "BIN_ALERT_CHANNEL")
+                .setSmallIcon(R.drawable.ic_alert)
+                .setContentTitle("Low Bin Alert")
+                .setContentText(binName + " is below its alert quantity!")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            notificationManager.notify(new Random().nextInt(), builder.build());
+        }
     }
 
     public void showBinNamePopup(Bin tempBin) {
