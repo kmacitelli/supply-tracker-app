@@ -47,7 +47,7 @@ public class BinAdapter extends RecyclerView.Adapter<BinAdapter.BinViewHolder> {
         holder.binNameText.setText(bin.getName());
         holder.alertQuantityText.setText("Alert Qty: " + bin.getAlertQuantity());
         holder.quantityText.setText("Individual Weight: " + bin.getIndividualWeight());
-        holder.totalQuantityText.setText("Total Quantity: " + bin.getTotalWeight());
+        holder.totalQuantityText.setText("Total Quantity: " + bin.getTotalQuantity());
     }
 
     @Override
