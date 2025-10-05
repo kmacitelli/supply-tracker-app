@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -80,9 +81,10 @@ public class MainActivity extends AppCompatActivity {
     private double readWeightFromServer() {
         double value = 0.0;
         try {
-            URL url = new URL("10.41.189.233:80");
+            URL url = new URL("http://10.41.189.233:80"); //10.41.189.233:80
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
+
 
             // Read the response
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -94,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        Log.d("foo", "the return value is " + value);
         return value;
     }
 
@@ -183,12 +187,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showNoItemPopup(Bin tempBin) {
+
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy =
+                    new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("No item in bin calibration");
         builder.setMessage("Please press OK when there are NO items in the bin");
 
+
         builder.setPositiveButton("OK", (dialog, which) -> {
+            Log.d("foo", "about to make call");
             double newWeight = readWeightFromServer();
+            Log.d("foo", "The new weight whatever is " + newWeight);
 
             showOneItemPopup(tempBin, newWeight);
         });

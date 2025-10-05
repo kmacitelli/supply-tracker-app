@@ -1,6 +1,9 @@
+import org.gradle.api.publish.internal.component.MavenPublishingAwareVariant
+
 plugins {
     alias(libs.plugins.android.application)
 }
+
 
 android {
     namespace = "com.pitt.supplytrackerapp"
@@ -36,6 +39,7 @@ android {
 
 dependencies {
 
+    implementation("commons-logging:commons-logging:1.2")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
