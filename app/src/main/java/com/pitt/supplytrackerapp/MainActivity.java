@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,9 +34,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.pitt.supplytrackerapp.databinding.ActivityMainBinding;
 import com.pitt.supplytrackerapp.ui.home.HomeViewModel;
-import com.pitt.supplytrackerapp.handler.*;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -82,37 +86,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private double readWeightFromServer() {
-        final double[] weight = {0.0};
-        Thread thread = new Thread(() -> {
-            try {
-                URL url = new URL("https://10.135.124.233/80");
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setConnectTimeout(2000);
-                connection.setReadTimeout(2000);
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String line = reader.readLine(); // read the only line
-                if (line != null) {
-                    weight[0] = Double.parseDouble(line.trim());
-                }
-
-                reader.close();
-                connection.disconnect();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-
-        thread.start();
-
+        double value = 0.0;
         try {
-            thread.join();
-        } catch (InterruptedException e) {
+            URL url = new URL("10.41.189.233:80");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            // Read the response
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String line = reader.readLine(); // Just one line expected
+            reader.close();
+
+            // Parse the line into a double
+            value = Double.parseDouble(line.trim());
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return weight[0];
+        return value;
     }
 
     private void createNotificationChannel() {
@@ -207,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
 
         builder.setPositiveButton("OK", (dialog, which) -> {
             double newWeight = readWeightFromServer();
+
             showOneItemPopup(tempBin, newWeight);
         });
 
