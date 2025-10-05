@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d("foo", "about to make call");
             double newWeight = readWeightFromServer();
             Log.d("foo", "The new weight whatever is " + newWeight);
-
+            tempBin.setEmptyWeight(newWeight);
             showOneItemPopup(tempBin, newWeight);
         });
 
@@ -215,8 +215,8 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage("Please press OK when there is ONE item in the bin");
 
         builder.setPositiveButton("OK", (dialog, which) -> {
-            double oneItemBinWeight = readWeightFromServer();
-
+            double oneItemBinWeight = readWeightFromServer() + 10;
+            tempBin.setTotalWeight(oneItemBinWeight);
             double individualWeight = oneItemBinWeight - noItemBinWeight;
             tempBin.setIndividualWeight(individualWeight);
 

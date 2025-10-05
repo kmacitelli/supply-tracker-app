@@ -7,11 +7,19 @@ public class Bin {
     private String name;
     private int totalQuantity;
     private double individualWeight;
+    private double emptyWeight;
     private double totalWeight;
     private int alertQuantity;
 
     public Bin() {
 
+    }
+
+    public void setEmptyWeight(double emptyWeight) {
+        this.emptyWeight = emptyWeight;
+    }
+    public double getEmptyWeight() {
+        return emptyWeight;
     }
 
     public void setName(String name) {
@@ -35,7 +43,8 @@ public class Bin {
         return name;
     }
     public int getTotalQuantity() {
-        return totalQuantity;
+        int actualQuantity = (int) (totalWeight - emptyWeight) / (int) individualWeight;
+        return actualQuantity;
     }
     public double getIndividualWeight() {
         return individualWeight;

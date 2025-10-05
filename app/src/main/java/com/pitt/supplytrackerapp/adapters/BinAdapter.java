@@ -23,14 +23,14 @@ public class BinAdapter extends RecyclerView.Adapter<BinAdapter.BinViewHolder> {
         TextView binNameText;
         TextView alertQuantityText;
         TextView quantityText;
-        TextView totalWeightText;
+        TextView totalQuantityText;
 
         public BinViewHolder(View itemView) {
             super(itemView);
             binNameText = itemView.findViewById(R.id.binNameText);
             alertQuantityText = itemView.findViewById(R.id.alertQuantityText);
             quantityText = itemView.findViewById(R.id.quantityText);
-            totalWeightText = itemView.findViewById(R.id.totalWeightText);
+            totalQuantityText = itemView.findViewById(R.id.totalQuantityText);
         }
     }
 
@@ -47,7 +47,7 @@ public class BinAdapter extends RecyclerView.Adapter<BinAdapter.BinViewHolder> {
         holder.binNameText.setText(bin.getName());
         holder.alertQuantityText.setText("Alert Qty: " + bin.getAlertQuantity());
         holder.quantityText.setText("Individual Weight: " + bin.getIndividualWeight());
-        holder.totalWeightText.setText("Total Weight: " + bin.getTotalWeight());
+        holder.totalQuantityText.setText("Total Quantity: " + bin.getTotalWeight());
     }
 
     @Override
