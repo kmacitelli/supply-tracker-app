@@ -7,7 +7,6 @@ public class Bin {
     private String name;
     private int totalQuantity;
     private double individualWeight;
-
     private double totalWeight;
     private int alertQuantity;
 

@@ -35,6 +35,10 @@ import com.pitt.supplytrackerapp.databinding.ActivityMainBinding;
 import com.pitt.supplytrackerapp.ui.home.HomeViewModel;
 import com.pitt.supplytrackerapp.handler.*;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
 
 public class MainActivity extends AppCompatActivity {
@@ -75,6 +79,40 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         createNotificationChannel();
+    }
+
+    private double readWeightFromServer() {
+        final double[] weight = {0.0};
+        Thread thread = new Thread(() -> {
+            try {
+                URL url = new URL("https://10.135.124.233/80");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setConnectTimeout(2000);
+                connection.setReadTimeout(2000);
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String line = reader.readLine(); // read the only line
+                if (line != null) {
+                    weight[0] = Double.parseDouble(line.trim());
+                }
+
+                reader.close();
+                connection.disconnect();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        thread.start();
+
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return weight[0];
     }
 
     private void createNotificationChannel() {
@@ -168,10 +206,8 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage("Please press OK when there are NO items in the bin");
 
         builder.setPositiveButton("OK", (dialog, which) -> {
-            // TODO: read weight from sensor for empty bin
-            double noItemBinWeight = 20.0;
-
-            showOneItemPopup(tempBin, noItemBinWeight);
+            double newWeight = readWeightFromServer();
+            showOneItemPopup(tempBin, newWeight);
         });
 
         builder.show();
@@ -182,8 +218,8 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage("Please press OK when there is ONE item in the bin");
 
         builder.setPositiveButton("OK", (dialog, which) -> {
-            double oneItemBinWeight = 25.0;
-            // TODO: read weight from sensor for one item in bin
+            double oneItemBinWeight = readWeightFromServer();
+
             double individualWeight = oneItemBinWeight - noItemBinWeight;
             tempBin.setIndividualWeight(individualWeight);
 
@@ -191,6 +227,8 @@ public class MainActivity extends AppCompatActivity {
             HomeViewModel homeViewModel = new ViewModelProvider(MainActivity.this).get(HomeViewModel.class);
             homeViewModel.setBins(binList);
         });
+
+
 
         builder.show();
     }
