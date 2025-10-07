@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.appBarMain.toolbar);
         DrawerLayout drawer = binding.drawerLayout;
-        NavigationView navigationView = binding.navView;
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -73,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
+
 
         createNotificationChannel();
     }
@@ -88,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
             // Read the response
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String line = reader.readLine(); // Just one line expected
+
             reader.close();
 
             // Parse the line into a double
