@@ -35,6 +35,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.pitt.supplytrackerapp.databinding.ActivityMainBinding;
 import com.pitt.supplytrackerapp.ui.home.HomeViewModel;
+import com.pitt.supplytrackerapp.ui.home.WebValueHandler;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -50,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
+
+    private WebValueHandler webValueHandler = new WebValueHandler();
 
     private String binName;
     private int alertQuantity;
@@ -67,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                R.id.nav_home)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
@@ -80,18 +83,11 @@ public class MainActivity extends AppCompatActivity {
     private double readWeightFromServer() {
         double value = 0.0;
         try {
-            URL url = new URL("http://10.41.189.233:80"); //10.41.189.233:80
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
+            String url = "http://10.0.2.2:8080/response.txt"; //access thru emulator
 
-            // Read the response
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String line = reader.readLine(); // Just one line expected
+            Object[] input = {url};
+            value = webValueHandler.doInBackground(input).getWeight();
 
-            reader.close();
-
-            // Parse the line into a double
-            value = Double.parseDouble(line.trim());
         } catch (Exception e) {
             e.printStackTrace();
         }
