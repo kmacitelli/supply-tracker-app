@@ -28,7 +28,7 @@ public class WebValueHandler extends AsyncTask {
 
     @Override
     public ServerResponse doInBackground(Object[] urlInput) {
-        double result = 10.0;
+        double result = 20.0;
 
         String urlString = urlInput[0].toString();
 
@@ -48,7 +48,9 @@ public class WebValueHandler extends AsyncTask {
                 while ((chunks = buff.readLine()) != null) {
                     dta.append(chunks);
                     Log.d("WebValueHandler", chunks);
-                    //result = do logic here; if you're reading the weight line, grab the double from it
+                    if (chunks.startsWith("\"weight\": ")) {
+                        result = Double.parseDouble(chunks.replace("\"weight\": ", ""));
+                    }
                 }
             } else {
                 //Handle else

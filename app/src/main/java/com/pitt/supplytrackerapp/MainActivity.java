@@ -16,9 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.navigation.NavigationView;
-
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -37,14 +34,6 @@ import com.pitt.supplytrackerapp.databinding.ActivityMainBinding;
 import com.pitt.supplytrackerapp.ui.home.HomeViewModel;
 import com.pitt.supplytrackerapp.ui.home.WebValueHandler;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.*;
 
 public class MainActivity extends AppCompatActivity {
@@ -89,10 +78,9 @@ public class MainActivity extends AppCompatActivity {
             value = webValueHandler.doInBackground(input).getWeight();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("MainActivity", "received error: " + e);
         }
 
-        Log.d("foo", "the return value is " + value);
         return value;
     }
 
@@ -193,11 +181,9 @@ public class MainActivity extends AppCompatActivity {
         builder.setTitle("No item in bin calibration");
         builder.setMessage("Please press OK when there are NO items in the bin");
 
-
         builder.setPositiveButton("OK", (dialog, which) -> {
-            Log.d("foo", "about to make call");
             double newWeight = readWeightFromServer();
-            Log.d("foo", "The new weight whatever is " + newWeight);
+            Log.d("MainActivity", "The new weight is " + newWeight);
             tempBin.setEmptyWeight(newWeight);
             showOneItemPopup(tempBin, newWeight);
         });
