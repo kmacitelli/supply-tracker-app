@@ -203,8 +203,6 @@ public class MainActivity extends AppCompatActivity {
             homeViewModel.setBins(binList);
         });
 
-
-
         builder.show();
     }
 
@@ -219,13 +217,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.add_device) {
-            Toast.makeText(this, "Added a new bin.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Adding a new bin.", Toast.LENGTH_LONG).show();
             Bin tempBin = new Bin();
             // Prompts the popup chain that gets required info from user
             // Name of bin, alert qty, individual weight
             showBinNamePopup(tempBin);
 
             return true;
+        } else if (item.getItemId() == R.id.recalibrateButton) {
+            Toast.makeText(this, "Recalibrating.", Toast.LENGTH_LONG).show();
+
         }
         return super.onOptionsItemSelected(item);
     }

@@ -7,4 +7,10 @@
         android:icon="@drawable/ic_add_icon"
         app:showAsAction="ifRoom"
         />
+
+    <item
+        android:id="@+id/recalibrateButton"
+        android:title="Recalibrate"
+        android:icon="@drawable/ic_reload"
+        app:showAsAction="ifRoom" />
 </menu>
